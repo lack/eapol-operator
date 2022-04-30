@@ -1,0 +1,54 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-eapol-eapol-openshift-io-v1-authenticator
+  failurePolicy: Fail
+  name: mauthenticator.kb.io
+  rules:
+  - apiGroups:
+    - eapol.eapol.openshift.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - authenticators
+  sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /validate-eapol-eapol-openshift-io-v1-authenticator
+  failurePolicy: Fail
+  name: vauthenticator.kb.io
+  rules:
+  - apiGroups:
+    - eapol.eapol.openshift.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - authenticators
+  sideEffects: None
