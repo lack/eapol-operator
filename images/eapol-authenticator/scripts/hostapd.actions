@@ -26,7 +26,8 @@ unprotectPorts() {
         log "$IFACE: allowing unprotected $proto ports $ports"
         for port in $ports; do
             logexec tc filter add dev $IFACE ingress pref 9999 protocol ip u32 match "$proto" dst "$port" 0xffff action ok index 99
-            # Need to figure out what to do for ipv6, as tc doesn't support it!
+            #logexec tc filter add dev $IFACE ingress pref 9999 protocol ipv6 u32 match ip6 dport "$port" 0xffff action ok index 100
+            logexec tc filter add dev $IFACE ingress pref 9999 protocol ipv6 u32 match "$proto" dst "$port" 0xffff action ok index 100
         done
     fi
 }
